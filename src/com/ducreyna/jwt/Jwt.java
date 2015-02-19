@@ -29,7 +29,7 @@ public class Jwt {
      * @param key       Key used for the signature
      * @param verify    True if you want to verify the signature
      *
-     * @return hMap<String, Object> payload
+     * @return payload
      *
      * @throws IllegalStateException
      * @throws IllegalArgumentException
@@ -82,7 +82,7 @@ public class Jwt {
      * @param payload   JSON to attach
      * @param key       Key used for the signature
      *
-     * @return String token
+     * @return token
      *
      * @throws IllegalArgumentException
      * @throws NoSuchAlgorithmException
@@ -119,7 +119,7 @@ public class Jwt {
      * @param key       Key used for the signature
      * @param algorithm Encryption algorithm to apply
      *
-     * @return String token
+     * @return token
      *
      * @throws IllegalArgumentException
      * @throws NoSuchAlgorithmException
@@ -159,7 +159,7 @@ public class Jwt {
      * @param key       Key used for the signature
      * @param method    Algorithm
      *
-     * @return byte[]   Signature
+     * @return Signature
      *
      * @throws NoSuchAlgorithmException
      * @throws UnsupportedEncodingException
@@ -196,7 +196,7 @@ public class Jwt {
      *
      * @param bytes   Bytes to encode
      *
-     * @return  String
+     * @return String
      *
      * @throws UnsupportedEncodingException
      */
@@ -221,7 +221,7 @@ public class Jwt {
      *
      * @param alg   Algorithm key
      *
-     * @return  Algorithm
+     * @return Algorithm
      *
      * @throws AlgorithmException
      */
