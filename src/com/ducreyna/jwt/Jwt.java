@@ -14,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Nathan Ducrey on 18/02/15.
@@ -37,9 +38,13 @@ public class Jwt {
      * @throws InvalidKeyException
      * @throws AlgorithmException
      */
-    public static HashMap<String, Object> decode(String token, String key, Boolean verify) throws IllegalStateException, VerifyException, IllegalArgumentException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, AlgorithmException {
+    public static Map<String, Object> decode(String token, String key, Boolean verify) throws IllegalStateException, VerifyException, IllegalArgumentException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, AlgorithmException {
         if (token == null || token.length() == 0) {
             throw new IllegalStateException("Token not set");
+        }
+        // Check key
+        if(key == null || key.length() == 0) {
+            throw new IllegalArgumentException("Key cannot be null or empty");
         }
 
         String[] segments = StringUtils.split(token, ".");
@@ -99,8 +104,8 @@ public class Jwt {
         // Create segments, all segment should be base64 String
         ArrayList<String> segments = new ArrayList<String>();
         Gson gson = new Gson();
-        segments.add(base64Encode(gson.toJson(header)));
-        segments.add(base64Encode(gson.toJson(payload)));
+        segments.add(base64Encode(gson.toJson(header).getBytes()));
+        segments.add(base64Encode(gson.toJson(payload).getBytes()));
         segments.add(base64Encode(sign(StringUtils.join(segments, "."), key, algorithm.getValue())));
 
         return StringUtils.join(segments, ".");
@@ -123,7 +128,7 @@ public class Jwt {
     public static String encode(HashMap<String, Object> payload, String key, Algorithm algorithm) throws IllegalArgumentException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         // Check key
         if(key == null || key.length() == 0) {
-            throw new IllegalArgumentException("Secret cannot be null or empty");
+            throw new IllegalArgumentException("Key cannot be null or empty");
         }
 
         if(algorithm == null) {
@@ -138,8 +143,9 @@ public class Jwt {
         // Create segments, all segment should be base64 String
         ArrayList<String> segments = new ArrayList<String>();
 
-        segments.add(base64Encode((new Gson()).toJson(header)));
-        segments.add(base64Encode((new Gson()).toJson(payload)));
+        Gson gson = new Gson();
+        segments.add(base64Encode(gson.toJson(header).getBytes()));
+        segments.add(base64Encode(gson.toJson(payload).getBytes()));
         segments.add(base64Encode(sign(StringUtils.join(segments, "."), key, algorithm.getValue())));
 
         return StringUtils.join(segments, ".");
@@ -158,12 +164,12 @@ public class Jwt {
      * @throws UnsupportedEncodingException
      * @throws InvalidKeyException
      */
-    private static String sign (String input, String key, String method) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException{
+    private static byte[] sign (String input, String key, String method) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException{
         Mac hmac = Mac.getInstance(method);
         SecretKey secretKey = new SecretKeySpec(key.getBytes(), method);
         hmac.init(secretKey);
 
-        return (new String(hmac.doFinal(input.getBytes("UTF-8"))));
+        return hmac.doFinal(input.getBytes());
     }
 
     /**
@@ -193,8 +199,8 @@ public class Jwt {
      *
      * @throws UnsupportedEncodingException
      */
-    private static String base64Encode (String str) throws UnsupportedEncodingException {
-        return Base64.encodeBase64URLSafeString(str.getBytes("UTF-8"));
+    private static String base64Encode (byte[] bytes) throws UnsupportedEncodingException {
+        return Base64.encodeBase64URLSafeString(bytes);
     }
 
     /**
