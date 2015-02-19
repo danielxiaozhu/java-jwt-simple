@@ -2,6 +2,7 @@ package com.ducreyna.jwt;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 
@@ -28,7 +29,7 @@ public class Jwt {
      * @param key       Key used for the signature
      * @param verify    True if you want to verify the signature
      *
-     * @return HashMap<String, Object> payload
+     * @return hMap<String, Object> payload
      *
      * @throws IllegalStateException
      * @throws IllegalArgumentException
@@ -158,7 +159,7 @@ public class Jwt {
      * @param key       Key used for the signature
      * @param method    Algorithm
      *
-     * @return String Signature
+     * @return byte[]   Signature
      *
      * @throws NoSuchAlgorithmException
      * @throws UnsupportedEncodingException
@@ -193,7 +194,7 @@ public class Jwt {
     /**
      * Private method to encode a String in base64
      *
-     * @param str   String to encode
+     * @param bytes   Bytes to encode
      *
      * @return  String
      *
